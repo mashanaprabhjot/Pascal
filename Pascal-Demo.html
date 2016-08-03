@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.3/angular.min.js"></script>
+
+    <style type="text/css">
+        .table {
+            display: block;
+            max-width:500px;
+        }
+
+        .row {
+            display: block;
+            clear: both;
+            height:20px;
+           
+        }
+
+        .cell {
+            display: inline-block;
+        }
+    </style>
+
+    <title>Pascal Example: </title>
+    <script type='text/javascript'> 
+
+        function PascalDemo($scope) {
+
+            $scope.GeneratePascalTriangle = function () {
+                
+                
+                var numTiers = $scope.tiers;
+                var triangle = [[1]],
+                tier;
+
+                for (var j = 0; j < numTiers - 1; j++) {
+                    tier = [1];
+                    for (var k = 1; k < triangle[j].length; k++) {
+                        tier[k] = triangle[j][k] + triangle[j][k - 1];
+                    }
+                    tier.push(1);
+                    triangle.push(tier);
+                }
+
+                return triangle;
+            }
+
+            $scope.change = function () {
+                localStorage.setItem("tiers", $scope.tiers);
+                if ($scope.tiers != "" && $scope.tiers != 0) {
+                    $scope.PascalTriangleModel = $scope.GeneratePascalTriangle();
+                }
+                else
+                {
+                    $scope.PascalTriangleModel = [];
+                }
+            }
+            //Red,Blue,Orange,Green
+
+            $scope.backgroundColor = function (index) {
+                var rem = (index +1) % 4 ;
+                if (rem == 1) {
+                    return "red";
+                }
+                if (rem == 2) {
+                    return "blue";
+                }
+                if (rem == 3) {
+                    return "orange";
+                }
+                if (rem == 0) {
+                    return "green";
+                }
+            }
+
+            $scope.ready = function () {
+                if (localStorage.getItem("tiers") != null)
+                {
+                    $scope.tiers = localStorage.getItem("tiers");
+                    $scope.change();
+                   
+                }
+            }
+            $scope.ready();
+        }
+    </script>
+</head>
+
+<body>
+    <div ng-app>
+        <h2>Pascal Demo</h2>
+        <div ng-controller="PascalDemo">
+            <input type="text" ng-model="tiers" ng-change="change()" size="30" placeholder="elnter number of tiers">
+            <div class="table">
+                <div class="row" ng-repeat="row in PascalTriangleModel" ng-style="{'background-color':backgroundColor($index)}">
+                    <div class="cell" ng-repeat="item in row" style="float: left;">
+                        {{item}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
